@@ -4,13 +4,20 @@ import feedparser
 feed = feedparser.parse("https://www.jpost.com/Rss/RssFeedsHeadlines.aspx")
 
 
-def testing(feed):
-    title = feed["entries"][0]['title']
-    a_link = feed["entries"][0]['link']
+@route('/newslist')
+def feed_to_list():
+    list_of_posts = []
+    for i in range(len(feed["entries"])):
+        post_entry = {
+            "title": feed["entries"][i]['title'],
+            "link": feed["entries"][i]['link']
+        }
+        list_of_posts.append(post_entry)
+    print(list_of_posts)
+    return json.dumps(list_of_posts)
 
 
 
-testing(feed)
 
 
 @route('/', method='GET')
@@ -18,17 +25,15 @@ def get_app():
     return template("static/html/index.html")
 
 
-# @route('/js/<filename:re:.*\.js>', method='GET')
-# def js(filename):
-#     return static_file(filename, root='static/js')
-#
-#
-# users = [{"name": "dana"}, {"name": "emilie"}, {"name": "hilla"}, {"name": "moshe"}]
-#
-#
-# @route('/usersList', method="GET")
-# def get_users():
-#     return json.dumps(users)
+@route('/js/<filename:re:.*\.js>', method='GET')
+def js(filename):
+    return static_file(filename, root='static/js')
+
+
+@route('/css/<filename:re:.*\.css>', method='GET')
+def js(filename):
+    return static_file(filename, root='static/css')
+
 #
 #
 # @route('/users/add', method="POST")
